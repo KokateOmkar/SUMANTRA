@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUMANTRA - AI Flower Identification</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="SUMANTRA" class="logo-image">
+                <h1>SUMANTRA</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#diary">Plant Diary</a></li>
+                    <li><a href="#learn">Learn</a></li>
+                </ul>
+                <button id="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="active-section">
+            <div class="container">
+                <h2>Identify Your Flowers</h2>
+                <p class="section-description">
+                    Upload a photo of a flower and get instant identification, health assessment, and care tips.
+                </p>
+
+                <div class="upload-container">
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="image-upload" accept="image/*" hidden>
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop a flower image or</p>
+                            <button id="upload-btn" class="btn primary">Browse Files</button>
+                            <p class="note">Supported formats: JPG, PNG, WEBP (max 5MB)</p>
+                        </div>
+                    </div>
+                    <div class="camera-option">
+                        <button id="camera-btn" class="btn outline"><i class="fas fa-camera"></i> Take Photo</button>
+                    </div>
+                </div>
+
+                <div id="preview-container" class="hidden">
+                    <h3>Preview</h3>
+                    <div class="preview-image-container">
+                        <img id="preview-image" src="#" alt="Preview">
+                        <button id="retake-btn" class="btn small"><i class="fas fa-redo"></i> Retake</button>
+                    </div>
+                    <button id="identify-btn" class="btn primary">Identify Flower</button>
+                </div>
+
+                <div id="camera-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Take a Photo</h3>
+                            <button id="close-camera" class="close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <video id="camera-stream" autoplay></video>
+                            <div class="camera-controls">
+                                <button id="capture-btn" class="btn primary"><i class="fas fa-camera"></i> Capture</button>
+                                <button id="switch-camera" class="btn outline"><i class="fas fa-sync"></i> Switch Camera</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-container" class="hidden">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <h3>Identification Results</h3>
+                            <span class="confidence-badge" id="confidence-badge">High Confidence</span>
+                        </div>
+                        <div class="result-body">
+                            <div class="result-image">
+                                <img id="result-image" src="#" alt="Flower Image">
+                            </div>
+                            <div class="result-details">
+                                <div class="result-item">
+                                    <h4>Flower Species</h4>
+                                    <p id="species-name">Loading...</p>
+                                </div>
+                                <div class="result-item">
+                                    <h4>Health Status</h4>
+                                    <p id="health-status">
+                                        <span id="health-indicator" class="health-indicator"></span>
+                                        <span id="health-text">Loading...</span>
+                                    </p>
+                                </div>
+                                <div class="result-item">
+                                    <h4>Care Tips</h4>
+                                    <ul id="care-tips" class="care-tips-list">
+                                        <li>Loading care tips...</li>
+                                    </ul>
+                                </div>
+                                <div class="result-actions">
+                                    <button id="save-to-diary" class="btn primary"><i class="fas fa-book"></i> Save to Diary</button>
+                                    <button id="new-identification" class="btn outline"><i class="fas fa-redo"></i> New Identification</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plant Diary Section -->
+        <section id="diary" class="hidden-section">
+            <div class="container">
+                <h2>Plant Diary</h2>
+                <p class="section-description">
+                    Keep track of your plants, add notes, and watch your garden grow over time.
+                </p>
+
+                <div class="user-identity">
+                    <p>User ID: <span id="user-id">user123</span> <button id="copy-user-id" class="btn small"><i class="fas fa-copy"></i></button></p>
+                    <p class="note">Save this ID to access your diary from different devices</p>
+                </div>
+
+                <div class="diary-actions">
+                    <button id="add-entry-btn" class="btn primary"><i class="fas fa-plus"></i> Add New Entry</button>
+                </div>
+
+                <div id="diary-entries" class="diary-entries">
+                    <div class="diary-placeholder">
+                        <i class="fas fa-book-open"></i>
+                        <p>Your diary is empty. Add your first plant!</p>
+                    </div>
+                </div>
+
+                <div id="entry-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>New Diary Entry</h3>
+                            <button id="close-entry-modal" class="close-btn">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="diary-form">
+                                <div class="form-group">
+                                    <label for="plant-name">Plant Name</label>
+                                    <input type="text" id="plant-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="plant-species">Flower Species (optional)</label>
+                                    <input type="text" id="plant-species">
+                                </div>
+                                <div class="form-group">
+                                    <label for="plant-notes">Notes</label>
+                                    <textarea id="plant-notes" rows="4" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="plant-image">Plant Image (optional)</label>
+                                    <input type="file" id="plant-image" accept="image/*">
+                                    <div class="image-preview">
+                                        <img id="plant-image-preview" src="#" alt="Plant Preview" class="hidden">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn primary">Save Entry</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learn Section -->
+        <section id="learn" class="hidden-section">
+            <div class="container">
+                <h2>Learn With Flowers</h2>
+                <p class="section-description">
+                    Discover interesting facts about flowers and improve your gardening knowledge.
+                </p>
+
+                <div class="learn-tabs">
+                    <button class="tab-btn active" data-tab="basics">Flower Basics</button>
+                    <button class="tab-btn" data-tab="care">Care Guide</button>
+                    <button class="tab-btn" data-tab="eco">Eco-Friendly Gardening</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="basics" class="tab-pane active">
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Flower Anatomy</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <img src="assets/flower-anatomy.png" alt="Flower Anatomy" class="info-image">
+                                    <p>Flowers typically consist of sepals, petals, stamens, and carpels. The male part, or stamen, consists of the anther and filament. The female part, or carpel, consists of the stigma, style, and ovary.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Pollination</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Pollination is the transfer of pollen from the anther to the stigma. This can happen through wind, water, or animals like bees, butterflies, and birds.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Life Cycle</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>The flower life cycle includes germination, growth, flowering, pollination, and seed dispersal. Some plants are annuals (complete life cycle in one growing season), while others are perennials (live for multiple years).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="care" class="tab-pane">
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Watering</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Most plants prefer consistent moisture but not soggy conditions. Water at the base of plants to prevent leaf diseases. Morning watering is generally better than evening.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Sunlight</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Different plants have different light requirements. Full sun is 6+ hours of direct sunlight, partial sun is 4-6 hours, and shade is less than 4 hours of direct sunlight per day.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Soil & Fertilizer</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Most flowering plants prefer well-draining soil rich in organic matter. Fertilize during the growing season with balanced fertilizer or compost for healthy blooms.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="eco" class="tab-pane">
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Composting</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Create your own compost from kitchen scraps and yard waste. It's a natural way to enrich soil and reduces landfill waste.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Water Conservation</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Collect rainwater in barrels for garden use. Use drip irrigation or soaker hoses to deliver water directly to plant roots with minimal waste.</p>
+                                </div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-card-header">
+                                    <h3>Natural Pest Control</h3>
+                                </div>
+                                <div class="info-card-body">
+                                    <p>Encourage beneficial insects like ladybugs and praying mantises. Use companion planting and organic solutions like neem oil instead of chemical pesticides.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="current-year">2023</span> SUMANTRA - AI Flower Identification and Care System</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
